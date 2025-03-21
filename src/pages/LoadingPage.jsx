@@ -1,7 +1,11 @@
 import React from "react";
 
 function LoadingPage() {
-  return <div></div>;
+  return (
+    <div>
+      <p></p>
+    </div>
+  );
 }
 
 export default LoadingPage;

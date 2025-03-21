@@ -7,6 +7,12 @@ import {
 } from "@heroicons/react/24/solid";
 import { ChatBubbleBottomCenterIcon } from "@heroicons/react/24/outline";
 import { sendMessageToGroq } from "../utils/ai";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { solarizedlight } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { ChevronDoubleLeftIcon } from "@heroicons/react/16/solid";
+import { Link } from "react-router-dom";
 
 function Chatbot() {
   const [messages, setMessages] = useState([]);
@@ -69,17 +75,24 @@ function Chatbot() {
   };
 
   return (
-    <div className="flex flex-col h-screen w-[80%] mx-auto">
+    <div className="flex flex-col h-screen w-[95%] mx-auto">
       {/* Header */}
       <header className="bg-blue-300 p-4 text-white mt-2 rounded-lg">
         <div className="container mx-auto flex justify-between items-center">
           <h1 className="text-xl font-bold flex items-center">
-            <ChatBubbleBottomCenterIcon className="h-6 w-6 mr-2" />
-            ChatLLM
+            <div className="flex items-center space-x-2 cursor-pointer">
+              <Link to="/" className="flex items-center">
+                <ChevronDoubleLeftIcon className="h-4 w-4 mr-1" />
+                <p className="text-xs mr-4 border p-2 rounded-lg">
+                  Back to StudyHub
+                </p>
+              </Link>
+            </div>
+            🤖 StudyBuddy
           </h1>
           <button
             onClick={clearChat}
-            className="flex items-center text-sm bg-blue-400 hover:bg-blue-500 px-3 py-1 rounded"
+            className="flex items-center text-sm border border-blue-400 hover:bg-blue-500 px-3 py-1 rounded"
           >
             <TrashIcon className="h-4 w-4 mr-1" />
             Clear Chat
@@ -105,7 +118,7 @@ function Chatbot() {
               <div
                 className={`max-w-xs md:max-w-md lg:max-w-lg px-4 py-2 rounded-lg ${
                   message.sender === "user"
-                    ? "bg-indigo-600 text-white rounded-br-none"
+                    ? "bg-blue-600 text-white rounded-br-none"
                     : "bg-white text-gray-800 rounded-bl-none shadow"
                 }`}
               >
@@ -122,7 +135,36 @@ function Chatbot() {
                     {formatTime(message.timestamp)}
                   </span>
                 </div>
-                <p className="text-sm">{message.text}</p>
+                {message.sender === "user" ? (
+                  <p className="text-sm">{message.text}</p>
+                ) : (
+                  <div className="markdown-content text-sm">
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        code({ inline, className, children, ...props }) {
+                          const match = /language-(\w+)/.exec(className || "");
+                          return !inline && match ? (
+                            <SyntaxHighlighter
+                              style={solarizedlight}
+                              language={match[1]}
+                              PreTag="div"
+                              {...props}
+                            >
+                              {String(children).replace(/\n$/, "")}
+                            </SyntaxHighlighter>
+                          ) : (
+                            <code className={className} {...props}>
+                              {children}
+                            </code>
+                          );
+                        },
+                      }}
+                    >
+                      {message.text}
+                    </ReactMarkdown>
+                  </div>
+                )}
               </div>
             </div>
           ))
@@ -141,7 +183,7 @@ function Chatbot() {
       </div>
 
       {/* Input Area */}
-      <div className="bg-zinc-100 mb-2 rounded-lg p-4">
+      <div className="mb-2 rounded-lg p-4">
         <div className="container mx-auto max-w-4xl">
           <form onSubmit={handleSubmit} className="flex items-center space-x-2">
             <input
