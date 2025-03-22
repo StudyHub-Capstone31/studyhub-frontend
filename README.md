@@ -31,7 +31,7 @@ StudyHub is a comprehensive platform designed to enhance academic excellence by 
 
 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/studyhub-frontend.git
+git clone https://github.com/StudyHub-Capstone31/studyhub-frontend.git
 cd studyhub-frontend
 ```
 
