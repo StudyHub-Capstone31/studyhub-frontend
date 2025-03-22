@@ -5,6 +5,9 @@ import {
   PaperAirplaneIcon,
   PencilIcon,
   TrashIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
+  UserIcon,
 } from "@heroicons/react/24/outline";
 
 function Discussion() {
@@ -16,6 +19,22 @@ function Discussion() {
   const [newPost, setNewPost] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
+
+  // Vote state management
+  const handleVote = (id, direction) => {
+    setDiscussions(
+      discussions.map((discussion) => {
+        if (discussion.id === id) {
+          const newLikes =
+            direction === "up"
+              ? discussion.likes + 1
+              : Math.max(0, discussion.likes - 1);
+          return { ...discussion, likes: newLikes };
+        }
+        return discussion;
+      })
+    );
+  };
 
   useEffect(() => {
     // Simulating API call to fetch forum data and discussions
@@ -44,6 +63,7 @@ function Discussion() {
           timestamp: "2023-12-28T13:45:00Z",
           likes: 5,
           replies: 2,
+          topic: "Projects",
         },
         {
           id: 2,
@@ -109,6 +129,7 @@ function Discussion() {
       timestamp: new Date().toISOString(),
       likes: 0,
       replies: 0,
+      topic: "General", // Default topic
     };
 
     setDiscussions([newDiscussion, ...discussions]);
@@ -129,41 +150,45 @@ function Discussion() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
-      <div className="flex items-center mb-4">
-        <button
-          onClick={() => navigate("/discussion-forum")}
-          className="mr-2 p-1 rounded-full hover:bg-gray-200"
-        >
-          <ArrowLeftIcon className="h-5 w-5 text-gray-600" />
-        </button>
-        <nav className="text-sm">
-          <Link
-            to="/discussion-forum"
-            className="text-gray-600 hover:text-gray-900"
-          >
-            Forums
+    <div className="bg-gray-50 max-w-4xl mx-auto p-4 rounded-lg">
+      <header className="flex items-center justify-between mb-8">
+        <div className="flex items-center">
+          <div className="w-10 h-10 rounded-full border border-indigo-500 flex items-center justify-center mr-3">
+            <div className="w-2 h-2 rounded-full bg-indigo-500"></div>
+          </div>
+          <Link to="/">
+            <h1 className="text-2xl font-bold text-gray-800">StudyHub</h1>
           </Link>
-          <span className="mx-2 text-gray-400">/</span>
-          <span className="text-gray-900">
-            {loading ? "Loading..." : forum?.title}
-          </span>
-        </nav>
-      </div>
+        </div>
+
+        <div className="flex items-center">
+          <button
+            onClick={() => navigate("/discussion-forum")}
+            className="flex items-center px-4 py-2 text-indigo-600 hover:bg-indigo-50 rounded-full transition-colors"
+          >
+            <ArrowLeftIcon className="h-4 w-4 mr-2" />
+            Back to Forums
+          </button>
+        </div>
+      </header>
 
       {loading ? (
         <div className="flex justify-center my-12">
-          <div className="animate-spin h-10 w-10 border-4 border-blue-500 rounded-full border-t-transparent"></div>
+          <div className="animate-spin h-10 w-10 border-4 border-indigo-500 rounded-full border-t-transparent"></div>
         </div>
       ) : (
         <>
-          <h1 className="text-3xl font-bold mb-3">{forum.title}</h1>
-          <p className="text-gray-600 mb-6">{forum.description}</p>
+          <div className="text-center mb-8">
+            <h2 className="text-xl font-bold text-indigo-500 mb-2">
+              {forum.title}
+            </h2>
+            <p className="text-gray-600">{forum.description}</p>
+          </div>
 
           <div className="bg-white rounded-lg shadow-md p-5 mb-8">
-            <h2 className="text-xl font-medium mb-3">Create a new post</h2>
+            <h2 className="text-lg font-medium mb-3">Create a new post</h2>
             <textarea
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               rows="3"
               placeholder="Share your thoughts or questions..."
               value={newPost}
@@ -171,7 +196,7 @@ function Discussion() {
             ></textarea>
             <div className="flex justify-end mt-3">
               <button
-                className="flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex items-center px-4 py-2 rounded-full bg-indigo-500 text-white hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 onClick={handleSubmitPost}
                 disabled={newPost.trim() === ""}
               >
@@ -181,60 +206,77 @@ function Discussion() {
             </div>
           </div>
 
-          <h2 className="text-xl font-medium mb-4">Recent Discussions</h2>
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <ul className="divide-y divide-gray-200">
-              {discussions.map((discussion) => (
-                <li key={discussion.id} className="p-4">
-                  <div className="flex">
-                    <div className="flex-shrink-0 mr-3">
-                      <img
-                        className="h-10 w-10 rounded-full"
-                        src={discussion.avatar}
-                        alt={discussion.username}
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <h3 className="text-sm font-medium">
-                            {discussion.username}
-                          </h3>
-                          <span className="text-xs text-gray-500">
-                            {formatDate(discussion.timestamp)}
-                          </span>
+          <h2 className="text-lg font-medium mb-4">Recent Discussions</h2>
+          <div className="space-y-4">
+            {discussions.map((discussion) => (
+              <div
+                key={discussion.id}
+                className="bg-white rounded-lg shadow overflow-hidden"
+              >
+                <div className="flex">
+                  <div className="w-16 bg-gray-100 p-2 flex flex-col items-center">
+                    <button
+                      onClick={() => handleVote(discussion.id, "up")}
+                      className="focus:outline-none hover:text-indigo-500 transition-colors"
+                    >
+                      <ChevronUpIcon className="w-5 h-5 text-gray-500" />
+                    </button>
+                    <span className="font-bold my-1">{discussion.likes}</span>
+                    <button
+                      onClick={() => handleVote(discussion.id, "down")}
+                      className="focus:outline-none hover:text-indigo-500 transition-colors"
+                    >
+                      <ChevronDownIcon className="w-5 h-5 text-gray-500" />
+                    </button>
+                  </div>
+
+                  <div className="p-4 flex-1">
+                    <div className="flex items-center mb-2">
+                      <span className="bg-indigo-100 text-indigo-600 px-3 py-1 rounded-full text-xs font-medium">
+                        {discussion.topic}
+                      </span>
+                      {discussion.userId === 5 && (
+                        <div className="ml-auto flex space-x-2">
+                          <button className="p-1 rounded-full text-indigo-600 hover:bg-indigo-50">
+                            <PencilIcon className="h-4 w-4" />
+                          </button>
+                          <button
+                            className="p-1 rounded-full text-red-600 hover:bg-red-50"
+                            onClick={() => handleDeleteClick(discussion.id)}
+                          >
+                            <TrashIcon className="h-4 w-4" />
+                          </button>
                         </div>
-                        {discussion.userId === 5 && (
-                          <div>
-                            <button className="p-1 rounded-full text-blue-600 hover:bg-blue-100">
-                              <PencilIcon className="h-4 w-4" />
-                            </button>
-                            <button
-                              className="p-1 rounded-full text-red-600 hover:bg-red-100"
-                              onClick={() => handleDeleteClick(discussion.id)}
-                            >
-                              <TrashIcon className="h-4 w-4" />
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                      <p className="mt-2 text-sm text-gray-800">
-                        {discussion.content}
-                      </p>
-                      <div className="mt-2 flex items-center">
-                        <button className="flex items-center text-sm text-gray-600 hover:text-blue-600 mr-4">
-                          <ArrowLeftIcon className="h-4 w-4 mr-1" />
-                          Reply ({discussion.replies})
-                        </button>
-                        <span className="text-sm text-gray-500">
-                          {discussion.likes} likes
+                      )}
+                    </div>
+
+                    <p className="text-gray-800 text-sm mb-4">
+                      {discussion.content}
+                    </p>
+
+                    <div className="flex items-center justify-between text-sm text-gray-500">
+                      <div className="flex items-center">
+                        <img
+                          src={discussion.avatar}
+                          alt={discussion.username}
+                          className="w-5 h-5 rounded-full mr-2"
+                        />
+                        <span>
+                          Posted by{" "}
+                          <span className="font-medium text-gray-700">
+                            {discussion.username}
+                          </span>{" "}
+                          · {formatDate(discussion.timestamp)}
                         </span>
+                      </div>
+                      <div className="flex items-center">
+                        <span>{discussion.replies} replies</span>
                       </div>
                     </div>
                   </div>
-                </li>
-              ))}
-            </ul>
+                </div>
+              </div>
+            ))}
           </div>
         </>
       )}
@@ -286,7 +328,7 @@ function Discussion() {
                 </button>
                 <button
                   type="button"
-                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                   onClick={() => setOpenDialog(false)}
                 >
                   Cancel

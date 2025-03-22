@@ -1,19 +1,92 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   EnvelopeIcon,
   LockClosedIcon,
   ArrowRightIcon,
 } from "@heroicons/react/24/outline";
+import { useAuth } from "../context/AuthContext";
+const baseUrl = "https://studyhub-backend-production.up.railway.app";
+// const baseUrl = "http://localhost:5000";
 
 const Login = () => {
-  const [email, setEmail] = useState("student@st.knust.edu.gh");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { login, currentUser, checkAuth } = useAuth();
+  const navigate = useNavigate();
+
+  // Redirect if user is already logged in
+  useEffect(() => {
+    if (currentUser) {
+      if (currentUser.role === "admin") {
+        navigate("/admin/dashboard");
+      } else {
+        navigate("/dashboard");
+      }
+    }
+  }, [currentUser, navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle login logic here
-    console.log("Logging in with:", email, password);
+    handleEmailLogin(email, password);
   };
+
+  const handleEmailLogin = async (email, password) => {
+    try {
+      setIsLoading(true);
+      setError("");
+      const url = `${baseUrl}/api/auth/login`;
+
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data);
+
+        // Store user data in context and cookies
+        login(data.user);
+
+        // Redirect based on user role
+        if (data.user.role === "admin") {
+          window.location.href = "/admin/dashboard";
+        } else {
+          window.location.href = "/dashboard";
+        }
+      } else {
+        const errorData = await response.json();
+        setError(
+          errorData.message || "Invalid email or password. Please try again."
+        );
+        console.error("Login failed:", errorData);
+      }
+    } catch (error) {
+      setError("Network error. Please try again later.");
+      console.error("Login error:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Don't render the login form if user is already logged in
+  if (currentUser) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="bg-white p-8 rounded-lg shadow-md">
+          <p className="text-center text-gray-600">
+            You are already logged in. Redirecting...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -79,20 +152,28 @@ const Login = () => {
               </div>
             </div>
 
-            <div className="text-right mb-6">
+            <div className="mb-6 flex items-center justify-end">
               <a
-                href="#"
+                href="/forgot-password"
                 className="text-gray-600 text-sm hover:text-indigo-600"
               >
                 Forgot Password?
               </a>
             </div>
 
+            {error && (
+              <div className="mb-4 p-2 bg-red-100 border border-red-400 text-red-700 rounded">
+                {error}
+              </div>
+            )}
+
             <button
               type="submit"
-              className="w-full flex items-center justify-center py-3 px-4 bg-gradient-to-r from-indigo-600 to-pink-500 text-white font-medium rounded-md hover:from-indigo-700 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              disabled={isLoading}
+              className="w-full flex outline-none items-center justify-center py-3 px-4 bg-gradient-to-r from-indigo-600 to-pink-500 text-white font-medium rounded-md hover:from-indigo-700 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-70"
             >
-              Log In <ArrowRightIcon className="ml-2 h-5 w-5" />
+              {isLoading ? "Logging in..." : "Log In"}
+              {!isLoading && <ArrowRightIcon className="ml-2 h-5 w-5" />}
             </button>
           </form>
 

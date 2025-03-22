@@ -1,145 +1,351 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate, Link, Routes, Route } from "react-router-dom";
 import {
-  ChatBubbleLeftRightIcon,
   MagnifyingGlassIcon,
-  UserGroupIcon,
-  ChatBubbleLeftIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
+  UserIcon,
+  ChevronDownIcon as ChevronDown,
 } from "@heroicons/react/24/outline";
 
-function DiscussionForum() {
-  const [forums, setForums] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
+// Discussion Item Component
+const DiscussionItem = ({ discussion }) => {
+  const [votes, setVotes] = useState(discussion.votes);
 
-  useEffect(() => {
-    // Simulating API call to fetch forums
-    setTimeout(() => {
-      const mockForums = [
-        {
-          id: 1,
-          title: "General Discussion",
-          description:
-            "Talk about anything related to academics or campus life.",
-          totalTopics: 156,
-          activeUsers: 42,
-          lastActivity: "2023-12-28",
-        },
-        {
-          id: 2,
-          title: "Computer Science",
-          description:
-            "Discussions about programming, algorithms, and computer science concepts.",
-          totalTopics: 87,
-          activeUsers: 29,
-          lastActivity: "2023-12-27",
-        },
-        {
-          id: 3,
-          title: "Mathematics",
-          description:
-            "Get help with mathematics problems and discuss mathematical concepts.",
-          totalTopics: 64,
-          activeUsers: 18,
-          lastActivity: "2023-12-26",
-        },
-        {
-          id: 4,
-          title: "Study Groups",
-          description: "Find or create study groups for your courses.",
-          totalTopics: 42,
-          activeUsers: 31,
-          lastActivity: "2023-12-25",
-        },
-        {
-          id: 5,
-          title: "Research Opportunities",
-          description:
-            "Information about research positions and discussions on ongoing research.",
-          totalTopics: 28,
-          activeUsers: 15,
-          lastActivity: "2023-12-24",
-        },
-      ];
-      setForums(mockForums);
-      setLoading(false);
-    }, 1000);
-  }, []);
-
-  const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
-    return new Date(dateString).toLocaleDateString(undefined, options);
+  const handleUpvote = () => {
+    setVotes((prev) => prev + 1);
   };
 
-  const filteredForums = forums.filter(
-    (forum) =>
-      forum.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      forum.description.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleDownvote = () => {
+    if (votes > 0) {
+      setVotes((prev) => prev - 1);
+    }
+  };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Discussion Forums</h1>
-
-      <div className="mb-8">
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
-          </div>
-          <input
-            type="text"
-            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Search forums..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+    <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="flex">
+        <div className="w-16 bg-gray-100 p-2 flex flex-col items-center">
+          <button
+            onClick={handleUpvote}
+            className="focus:outline-none hover:text-indigo-500 transition-colors"
+          >
+            <ChevronUpIcon className="w-5 h-5 text-gray-500" />
+          </button>
+          <span className="font-bold my-1">{votes}</span>
+          <button
+            onClick={handleDownvote}
+            className="focus:outline-none hover:text-indigo-500 transition-colors"
+          >
+            <ChevronDownIcon className="w-5 h-5 text-gray-500" />
+          </button>
         </div>
-      </div>
 
-      {loading ? (
-        <div className="flex justify-center my-12">
-          <div className="animate-spin h-10 w-10 border-4 border-blue-500 rounded-full border-t-transparent"></div>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {filteredForums.map((forum) => (
-            <div
-              key={forum.id}
-              className="bg-white rounded-lg shadow-md overflow-hidden"
+        <div className="p-4 flex-1">
+          <div className="flex items-center mb-2">
+            <Link
+              to={`/topics/${discussion.topic
+                .toLowerCase()
+                .replace(/\s+/g, "-")}`}
             >
-              <div className="p-4">
-                <div className="flex items-center mb-3">
-                  <ChatBubbleLeftRightIcon className="h-6 w-6 text-blue-500 mr-2" />
-                  <h2 className="text-xl font-medium">{forum.title}</h2>
-                </div>
-                <p className="text-gray-600 mb-4">{forum.description}</p>
-                <hr className="my-4" />
-                <div className="flex flex-wrap justify-between text-sm text-gray-500">
-                  <div className="flex items-center">
-                    <ChatBubbleLeftIcon className="h-4 w-4 mr-1" />
-                    <span>{forum.totalTopics} Topics</span>
-                  </div>
-                  <div className="flex items-center">
-                    <UserGroupIcon className="h-4 w-4 mr-1" />
-                    <span>{forum.activeUsers} Active Users</span>
-                  </div>
-                  <div>Last Activity: {formatDate(forum.lastActivity)}</div>
-                </div>
+              <span className="bg-indigo-100 text-indigo-600 px-3 py-1 rounded-full text-xs font-medium">
+                {discussion.topic}
+              </span>
+            </Link>
+          </div>
+
+          <Link to={`/discussion/${discussion.id}`}>
+            <h3 className="font-bold text-lg mb-2 hover:text-indigo-600 transition-colors">
+              {discussion.title}
+            </h3>
+          </Link>
+          <p className="text-gray-600 text-sm mb-4">{discussion.content}</p>
+
+          <div className="flex items-center justify-between text-sm text-gray-500">
+            <div className="flex items-center">
+              <span>
+                Posted by{" "}
+                <span className="font-medium text-gray-700">
+                  {discussion.author}
+                </span>{" "}
+                · {discussion.time}
+              </span>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center">
+                <span>{discussion.replies} replies</span>
               </div>
-              <div className="px-4 py-3 bg-gray-50">
-                <Link
-                  to={`/discussion/${forum.id}`}
-                  className="block w-full text-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                >
-                  Enter Forum
-                </Link>
+              <div className="flex items-center">
+                <span>{discussion.views} views</span>
               </div>
             </div>
-          ))}
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
-}
+};
 
-export default DiscussionForum;
+// Topic Page Component
+const TopicPage = ({ topic }) => {
+  return (
+    <div className="p-6 bg-white rounded-lg shadow">
+      <h2 className="text-2xl font-bold mb-4 text-indigo-600">
+        {topic} Discussions
+      </h2>
+      <p className="text-gray-600 mb-6">
+        Browse all discussions related to {topic}.
+      </p>
+
+      <Link to="/" className="text-indigo-500 hover:underline">
+        &larr; Back to all discussions
+      </Link>
+    </div>
+  );
+};
+
+// Main StudyHub Component
+const StudyHub = () => {
+  const [activeFilter, setActiveFilter] = useState("latest");
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Sample discussion data
+  const discussions = [
+    {
+      id: 1,
+      topic: "Data Structures",
+      title: "Help with Data Structures!",
+      content:
+        "Can someone explain arrays? I'm having trouble understanding how they work and their implementation in different programming languages. Any resources would be helpful too.",
+      author: "Vincent",
+      time: "2 hours ago",
+      replies: 7,
+      views: 42,
+      votes: 13,
+    },
+    {
+      id: 2,
+      topic: "Programming",
+      title: "What is Computer Code?",
+      content:
+        "How does a computer code work? I'm a complete beginner and trying to understand the fundamentals of programming. What languages should I start with?",
+      author: "Nana Yaw",
+      time: "5 hours ago",
+      replies: 5,
+      views: 31,
+      votes: 8,
+    },
+    {
+      id: 3,
+      topic: "Operation Research",
+      title: "Help with Operation Research!",
+      content:
+        "Can someone explain transportation analysis? I'm struggling with the concepts and mathematical models. Any examples or step-by-step guides would be appreciated.",
+      author: "Vincent",
+      time: "2 hours ago",
+      replies: 7,
+      views: 28,
+      votes: 5,
+    },
+    {
+      id: 4,
+      topic: "HCI",
+      title: "What is Human Computer Interaction (HCI)?",
+      content:
+        "What is HCI about and what is it used for? I'm interested in learning more about this field and how it relates to UX/UI design. Are there any good resources to get started?",
+      author: "Vincent",
+      time: "2 hours ago",
+      replies: 7,
+      views: 36,
+      votes: 10,
+    },
+  ];
+
+  const handleFilterChange = (filter) => {
+    setActiveFilter(filter);
+    // In a real app, you would filter the discussions based on the selected filter
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    // In a real app, you would load the appropriate discussions for the selected page
+  };
+
+  return (
+    <div className="bg-gray-50 p-4 rounded-lg max-w-4xl mx-auto">
+      <header className="flex items-center justify-between mb-8">
+        <div className="flex items-center">
+          <Link to="/">
+            <h1 className="text-2xl font-bold text-gray-800">StudyHub</h1>
+          </Link>
+        </div>
+
+        <div className="flex items-center space-x-4">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search discussions..."
+              className="pl-10 pr-4 py-2 rounded-full border border-gray-300 text-sm w-64"
+            />
+            <MagnifyingGlassIcon className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
+          </div>
+
+          <div className="relative">
+            <Link to="/topics">
+              <button className="flex items-center space-x-2 px-4 py-2 rounded-full border border-gray-300 text-sm hover:bg-gray-50">
+                <span>All Topics</span>
+                <ChevronDown className="w-4 h-4" />
+              </button>
+            </Link>
+          </div>
+
+          <div className="relative">
+            <div
+              className="w-10 h-10 rounded-full bg-cover bg-center"
+              style={{ backgroundImage: `url('/api/placeholder/40/40')` }}
+            ></div>
+            <div className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-green-500"></div>
+          </div>
+        </div>
+      </header>
+
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <div className="text-center mb-8">
+                <h2 className="text-xl font-bold text-indigo-500 mb-2">
+                  Discussion Forum
+                </h2>
+                <p className="text-gray-600">
+                  Join the conversation and share your knowledge with the
+                  community
+                </p>
+                <div className="mt-3">
+                  <Link
+                    to="/topics"
+                    className="inline-block px-4 py-1.5 text-sm text-indigo-600 hover:text-indigo-700 hover:underline"
+                  >
+                    View all topics →
+                  </Link>
+                </div>
+              </div>
+
+              <div className="flex space-x-4 mb-6">
+                <button
+                  onClick={() => handleFilterChange("latest")}
+                  className={`px-6 py-2 rounded-full flex items-center ${
+                    activeFilter === "latest"
+                      ? "bg-indigo-500 text-white"
+                      : "bg-white text-gray-700 border border-gray-300"
+                  }`}
+                >
+                  <span
+                    className={`w-2 h-2 rounded-full mr-2 ${
+                      activeFilter === "latest"
+                        ? "bg-white"
+                        : "border border-gray-500"
+                    }`}
+                  ></span>
+                  Latest
+                </button>
+                <button
+                  onClick={() => handleFilterChange("popular")}
+                  className={`px-6 py-2 rounded-full flex items-center ${
+                    activeFilter === "popular"
+                      ? "bg-indigo-500 text-white"
+                      : "bg-white text-gray-700 border border-gray-300"
+                  }`}
+                >
+                  <span
+                    className={`w-2 h-2 rounded-full mr-2 ${
+                      activeFilter === "popular"
+                        ? "bg-white"
+                        : "border border-gray-500"
+                    }`}
+                  ></span>
+                  Popular
+                </button>
+                <button
+                  onClick={() => handleFilterChange("unanswered")}
+                  className={`px-6 py-2 rounded-full flex items-center ${
+                    activeFilter === "unanswered"
+                      ? "bg-indigo-500 text-white"
+                      : "bg-white text-gray-700 border border-gray-300"
+                  }`}
+                >
+                  <span
+                    className={`w-2 h-2 rounded-full mr-2 ${
+                      activeFilter === "unanswered"
+                        ? "bg-white"
+                        : "border border-gray-500"
+                    }`}
+                  ></span>
+                  Unanswered
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                {discussions.map((discussion) => (
+                  <DiscussionItem key={discussion.id} discussion={discussion} />
+                ))}
+              </div>
+
+              <div className="flex justify-center space-x-2 mt-8">
+                {[1, 2, 3].map((page) => (
+                  <button
+                    key={page}
+                    onClick={() => handlePageChange(page)}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                      currentPage === page
+                        ? "bg-indigo-500 text-white"
+                        : "bg-white border border-gray-300 text-gray-700"
+                    }`}
+                  >
+                    {page}
+                  </button>
+                ))}
+                <span className="flex items-center px-2">...</span>
+                <button
+                  onClick={() => handlePageChange(10)}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                    currentPage === 10
+                      ? "bg-indigo-500 text-white"
+                      : "bg-white border border-gray-300 text-gray-700"
+                  }`}
+                >
+                  10
+                </button>
+              </div>
+            </>
+          }
+        />
+
+        <Route
+          path="/topics/:topicName"
+          element={<TopicPage topic="Data Structures" />}
+        />
+        <Route
+          path="/discussion/:id"
+          element={
+            <div className="p-6 bg-white rounded-lg shadow">
+              Discussion details would go here
+            </div>
+          }
+        />
+      </Routes>
+    </div>
+  );
+};
+
+// App Component with Router
+const App = () => {
+  return (
+    <div className="p-4">
+      <StudyHub />
+    </div>
+  );
+};
+
+export default App;

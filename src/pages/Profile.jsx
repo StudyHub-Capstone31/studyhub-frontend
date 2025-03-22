@@ -7,6 +7,7 @@ import {
   ExclamationCircleIcon,
   CheckCircleIcon,
 } from "@heroicons/react/24/outline";
+import { useAuth } from "../context/AuthContext";
 
 function Profile() {
   const [user, setUser] = useState(null);
@@ -19,6 +20,7 @@ function Profile() {
     message: "",
     type: "success",
   });
+  const { currentUser, updateUserData } = useAuth();
 
   // Form fields
   const [formValues, setFormValues] = useState({
@@ -32,35 +34,54 @@ function Profile() {
   });
 
   useEffect(() => {
-    // Simulate API call to fetch user profile data
-    setTimeout(() => {
-      const mockUserData = {
-        id: 123,
-        firstName: "John",
-        lastName: "Doe",
-        email: "john.doe@example.com",
-        phoneNumber: "(555) 123-4567",
-        role: "student",
-        department: "Computer Science",
-        bio: "I'm a third-year computer science student interested in artificial intelligence and machine learning.",
-        avatarUrl: "https://mui.com/static/images/avatar/1.jpg",
-        joined: "2022-09-01",
-      };
-
-      setUser(mockUserData);
+    if (currentUser) {
+      // Use actual user data from auth context
+      setUser(currentUser);
       setFormValues({
-        firstName: mockUserData.firstName,
-        lastName: mockUserData.lastName,
-        email: mockUserData.email,
-        phoneNumber: mockUserData.phoneNumber,
-        role: mockUserData.role,
-        department: mockUserData.department,
-        bio: mockUserData.bio,
+        firstName:
+          currentUser.firstName || currentUser.name?.split(" ")[0] || "",
+        lastName: currentUser.lastName || currentUser.name?.split(" ")[1] || "",
+        email: currentUser.email || "",
+        phoneNumber: currentUser.phoneNumber || "",
+        role: currentUser.role || "",
+        department: currentUser.department || "",
+        bio: currentUser.bio || "",
       });
-      setPreviewAvatar(mockUserData.avatarUrl);
+      setPreviewAvatar(
+        currentUser.avatarUrl || "https://mui.com/static/images/avatar/1.jpg"
+      );
       setLoading(false);
-    }, 1000);
-  }, []);
+    } else {
+      // Fallback to mock data if no user is logged in
+      setTimeout(() => {
+        const mockUserData = {
+          id: 123,
+          firstName: "John",
+          lastName: "Doe",
+          email: "john.doe@example.com",
+          phoneNumber: "(555) 123-4567",
+          role: "student",
+          department: "Computer Science",
+          bio: "I'm a third-year computer science student interested in artificial intelligence and machine learning.",
+          avatarUrl: "https://mui.com/static/images/avatar/1.jpg",
+          joined: "2022-09-01",
+        };
+
+        setUser(mockUserData);
+        setFormValues({
+          firstName: mockUserData.firstName,
+          lastName: mockUserData.lastName,
+          email: mockUserData.email,
+          phoneNumber: mockUserData.phoneNumber,
+          role: mockUserData.role,
+          department: mockUserData.department,
+          bio: mockUserData.bio,
+        });
+        setPreviewAvatar(mockUserData.avatarUrl);
+        setLoading(false);
+      }, 1000);
+    }
+  }, [currentUser]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -106,6 +127,10 @@ function Profile() {
         avatarUrl: previewAvatar,
       };
       setUser(updatedUser);
+
+      // Update the user data in context and cookies
+      updateUserData(updatedUser);
+
       setEditMode(false);
       setLoading(false);
       setNotification({

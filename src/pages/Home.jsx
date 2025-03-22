@@ -1,65 +1,159 @@
 import React from "react";
 import {
-  BookOpenIcon,
-  ChatBubbleOvalLeftEllipsisIcon,
-  MagnifyingGlassCircleIcon,
+  MagnifyingGlassIcon,
+  DocumentTextIcon,
+  ChatBubbleLeftRightIcon,
+  ArrowUpTrayIcon,
   MegaphoneIcon,
-} from "@heroicons/react/24/solid";
-import { Link } from "react-router-dom";
-import { ArrowUpIcon } from "@heroicons/react/24/outline";
-import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+  UserGroupIcon,
+} from "@heroicons/react/24/outline";
 
-function Home() {
+const Home = () => {
   return (
-    <main>
-      <div className="w-[600px] mx-auto mt-8">
-        <header className="flex items-center justify-between mx-4 m-2">
-          <p className="font-bold text-2xl">StudyHub</p>
+    <div className="min-h-screen bg-white relative overflow-hidden">
+      {/* Background network effect */}
+      <div className="absolute inset-0 overflow-hidden">
+        <svg className="w-full h-full opacity-10" viewBox="0 0 800 600">
+          <g stroke="#4F46E5" strokeWidth="0.5" fill="none">
+            {/* Generate random dots and lines for network effect */}
+            {Array.from({ length: 20 }).map((_, i) => (
+              <React.Fragment key={i}>
+                <circle
+                  cx={Math.random() * 800}
+                  cy={Math.random() * 600}
+                  r="2"
+                  fill={Math.random() > 0.5 ? "#4F46E5" : "#E53E3E"}
+                />
+                <line
+                  x1={Math.random() * 800}
+                  y1={Math.random() * 600}
+                  x2={Math.random() * 800}
+                  y2={Math.random() * 600}
+                />
+              </React.Fragment>
+            ))}
+          </g>
+        </svg>
+      </div>
 
-          <div className="border w-2 h-2 p-4 rounded-full bg-red-200">.</div>
+      {/* Main content */}
+      <div className="relative z-10 max-w-6xl mx-auto px-4 pb-16">
+        {/* Header with avatar and color dots */}
+        <header className="flex justify-between items-center py-4">
+          <div className="text-2xl font-bold text-gray-800">StudyHub</div>
+          <div className="flex items-center">
+            <div className="h-2 w-2 rounded-full bg-blue-600 mr-1"></div>
+            <div className="h-2 w-2 rounded-full bg-orange-400"></div>
+            <div className="ml-6 relative">
+              <img
+                src="/api/placeholder/48/48"
+                alt="Avatar"
+                className="h-10 w-10 rounded-full border-2 border-white"
+              />
+              <div className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-green-500 border border-white"></div>
+            </div>
+          </div>
         </header>
 
-        <section id="search">
-          <div className="flex gap-4 border p-2 rounded-lg shadow shadow-md">
-            <MagnifyingGlassIcon className="w-5 mx-2" />
-            <p className="text-zinc-400">
-              Search lecture notes, past questions...
-            </p>
+        {/* Search bar */}
+        <div className="mt-12 mb-14">
+          <div className="relative max-w-2xl mx-auto">
+            <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+              <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
+            </div>
+            <input
+              type="text"
+              className="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Search lecture notes, past questions..."
+            />
           </div>
-        </section>
+        </div>
 
-        <section id="hero" className="flex flex-col w-full mx-auto mt-16">
-          <p className="mx-auto text-3xl font-bold">
+        {/* Welcome text */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-800">
             Welcome to <span className="text-blue-600">StudyHub</span>
+          </h1>
+          <p className="text-gray-600 mt-2">
+            Your one-stop platform for academic resources and collaboration
           </p>
-          <p className="mt-4">
-            Your one-stop platform for academic resouces and collaboration
-          </p>
-        </section>
+        </div>
 
-        <section className="flex flex-wrap text-sm underline width-[600px] mx-auto gap-y-2 gap-x-2 mt-8">
-          <div className="mx-auto w-[290px] flex flex-col items-center px-16 py-6 rounded-lg border">
-            <BookOpenIcon color="blue" className="w-8" />
-            <Link to="/resources">Browse Resources</Link>
-          </div>
-          <div className="mx-auto w-[290px] flex flex-col items-center px-16 py-6 rounded-lg border">
-            <ChatBubbleOvalLeftEllipsisIcon color="blue" className="w-8" />
-            <Link to="/discussions">Join Discussions</Link>
-          </div>
-          <div className="mx-auto w-[290px] flex flex-col items-center px-16 py-6 rounded-lg border">
-            <ArrowUpIcon color="blue" className="w-8" />
-            <Link to="/uploadsdownloads">Upload Files</Link>
-          </div>
-          <div className="mx-auto w-[290px] flex flex-col items-center px-16 py-6 rounded-lg border">
-            <MegaphoneIcon color="blue" className="w-8" />
-            <Link to="/announcements">Latest Announcements</Link>
-          </div>
-        </section>
+        {/* Feature cards grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-16">
+          <a
+            href="/resources"
+            className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 flex flex-col items-center justify-center hover:shadow-md transition duration-300"
+          >
+            <DocumentTextIcon className="h-10 w-10 text-blue-600 mb-3" />
+            <span className="text-gray-800 text-sm font-medium">
+              Browse Resources
+            </span>
+          </a>
 
-        <section id="users">t</section>
+          <a
+            href="/discussion-forum"
+            className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 flex flex-col items-center justify-center hover:shadow-md transition duration-300"
+          >
+            <ChatBubbleLeftRightIcon className="h-10 w-10 text-blue-600 mb-3" />
+            <span className="text-gray-800 text-sm font-medium">
+              Join Discussions
+            </span>
+          </a>
+
+          <a
+            href="/uploadsdownloads"
+            className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 flex flex-col items-center justify-center hover:shadow-md transition duration-300"
+          >
+            <ArrowUpTrayIcon className="h-10 w-10 text-blue-600 mb-3" />
+            <span className="text-gray-800 text-sm font-medium">
+              Upload Files
+            </span>
+          </a>
+
+          <a
+            href="/announcements"
+            className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 flex flex-col items-center justify-center hover:shadow-md transition duration-300"
+          >
+            <MegaphoneIcon className="h-10 w-10 text-blue-600 mb-3" />
+            <span className="text-gray-800 text-sm font-medium">
+              Latest Announcement
+            </span>
+          </a>
+        </div>
+
+        {/* Stats */}
+        <div className="flex justify-center space-x-12 mb-16">
+          <div className="text-center">
+            <div className="text-3xl font-bold text-blue-600">5000</div>
+            <div className="text-sm text-gray-500">Students</div>
+          </div>
+
+          <div className="text-center">
+            <div className="text-3xl font-bold text-blue-600">200</div>
+            <div className="text-sm text-gray-500">Resources</div>
+          </div>
+
+          <div className="text-center">
+            <div className="text-3xl font-bold text-blue-600">50</div>
+            <div className="text-sm text-gray-500">Courses</div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <footer className="text-center text-gray-500 text-xs">
+          <p>© 2025 StudyHub • Privacy Policy • Terms of Service</p>
+        </footer>
       </div>
-    </main>
+
+      {/* Chat button */}
+      <div className="fixed bottom-6 right-6">
+        <button className="bg-red-500 hover:bg-red-600 text-white p-3 rounded-full shadow-lg">
+          <ChatBubbleLeftRightIcon className="h-6 w-6" />
+        </button>
+      </div>
+    </div>
   );
-}
+};
 
 export default Home;
