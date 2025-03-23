@@ -49,7 +49,7 @@ const ResourceCard = ({
   buttons,
   fileUrl,
 }) => (
-  <div className="border rounded-lg p-4 flex items-start">
+  <div className="border-none shadow-sm bg-gray-50 rounded-lg p-4 flex items-start">
     <div
       className={`bg-blue-500 rounded-lg p-3 mr-4 flex items-center justify-center`}
     >

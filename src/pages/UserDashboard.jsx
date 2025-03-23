@@ -49,6 +49,14 @@ const UserDashboard = () => {
     console.log(currentUser);
   };
 
+  // Get user's avatar URL or default to initial
+  const getUserAvatar = () => {
+    if (currentUser && currentUser.avatarUrl) {
+      return currentUser.avatarUrl;
+    }
+    return null;
+  };
+
   // Handle file upload logic
   const handleFileUpload = (files) => {
     setIsUploading(true);
@@ -71,14 +79,12 @@ const UserDashboard = () => {
     // This would be an API call in a production app
     // For now, i'm using mock data
     setStats({ downloads: 0, uploads: 0 });
-    // For now, i'm using mock data
-    setStats({ downloads: 0, uploads: 0 });
     setActivities([
       {
         type: "forum",
         user: "Adolph O.",
         description: "replied to your forum post",
-        time: new Date(Date.now() - 60000 * 120),
+        time: new Date(Date.now() - 60000 * 120), // 2 hours ago
       },
     ]);
   }, [currentUser]);
@@ -92,9 +98,17 @@ const UserDashboard = () => {
         {/* User Info */}
         <div className="flex items-center mb-12">
           <div className="relative mr-4">
-            <div className="h-12 w-12 rounded-full bg-yellow-500 flex items-center justify-center">
-              <span className="text-white font-bold">{getInitial()}</span>
-            </div>
+            {getUserAvatar() ? (
+              <img
+                src={getUserAvatar()}
+                alt={`${getUserName()}'s avatar`}
+                className="h-12 w-12 rounded-full object-cover"
+              />
+            ) : (
+              <div className="h-12 w-12 rounded-full bg-yellow-500 flex items-center justify-center">
+                <span className="text-white font-bold">{getInitial()}</span>
+              </div>
+            )}
           </div>
           <div>
             <h2 className="text-lg font-semibold">Hi, {getUserName()}!</h2>

@@ -19,6 +19,7 @@ import Discussion from "./pages/Discussion";
 import Topics from "./pages/Topics";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ForgotPassword from "./pages/ForgotPassword";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           <Route path="/announcements" element={<Announcements />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route
             path="/profile"
             element={

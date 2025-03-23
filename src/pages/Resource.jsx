@@ -81,7 +81,7 @@ const ResourceCard = ({
   buttons,
   fileUrl,
 }) => (
-  <div className="border rounded-lg p-4 flex items-start">
+  <div className="border-none bg-gray-50 shadow-sm rounded-lg p-4 flex items-start">
     <div
       className={`bg-blue-500 rounded-lg p-3 mr-4 flex items-center justify-center`}
     >
@@ -124,21 +124,80 @@ const PreviewButton = ({ onClick }) => (
 
 // YouTube Button Component
 const YouTubeButton = () => (
-  <button className="text-xs flex items-center text-red-600 mr-4">
+  <button
+    onClick={() => {
+      window.location("https://youtube.com");
+    }}
+    className="text-xs flex items-center text-red-600 mr-4"
+  >
     <FaYoutube className="mr-1" /> Watch on YouTube
   </button>
 );
 
 // Share Button Component
 const ShareButton = () => (
-  <button className="text-xs flex items-center text-gray-600 mr-4">
+  <button
+    onClick={() => {
+      // Function to share the resource
+      const shareData = {
+        title: "Check out this resource on StudyHub",
+        text: "I found this great learning resource you might find useful!",
+        url: window.location.href,
+      };
+
+      // Use Web Share API if available
+      if (navigator.share) {
+        navigator
+          .share(shareData)
+          .then(() => console.log("Shared successfully"))
+          .catch((error) => console.log("Error sharing:", error));
+      } else {
+        // Fallback: copy the URL to clipboard
+        navigator.clipboard
+          .writeText(shareData.url)
+          .then(() => alert("Link copied to clipboard!"))
+          .catch(() => alert("Could not copy link"));
+      }
+    }}
+    className="cursor-pointer text-xs flex items-center text-gray-600 mr-4"
+  >
     <ShareIcon className="h-4 w-4 mr-1" /> Share
   </button>
 );
 
 // Save Button Component
 const SaveButton = () => (
-  <button className="text-xs flex items-center text-gray-600">
+  <button
+    onClick={() => {
+      // Show a toast notification when the user saves a resource
+      try {
+        // You could store this in local storage, a database, or state management
+        // For now we'll just show a notification
+
+        // Create a toast element
+        const toast = document.createElement("div");
+        toast.className =
+          "fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg";
+        toast.textContent = "Resource saved successfully!";
+        document.body.appendChild(toast);
+
+        // Remove the toast after 3 seconds
+        setTimeout(() => {
+          toast.classList.add(
+            "opacity-0",
+            "transition-opacity",
+            "duration-500"
+          );
+          setTimeout(() => document.body.removeChild(toast), 500);
+        }, 3000);
+
+        console.log("Resource saved");
+      } catch (error) {
+        console.error("Error saving resource:", error);
+      }
+    }}
+    className="text-xs flex items-center text-gray-600"
+  >
     <BookmarkIcon className="h-4 w-4 mr-1" /> Save
   </button>
 );

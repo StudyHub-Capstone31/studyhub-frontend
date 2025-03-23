@@ -20,11 +20,7 @@ const Login = () => {
   // Redirect if user is already logged in
   useEffect(() => {
     if (currentUser) {
-      if (currentUser.role === "admin") {
-        navigate("/admin/dashboard");
-      } else {
-        navigate("/dashboard");
-      }
+      navigate("/dashboard");
     }
   }, [currentUser, navigate]);
 
@@ -172,7 +168,7 @@ const Login = () => {
               disabled={isLoading}
               className="w-full flex outline-none items-center justify-center py-3 px-4 bg-gradient-to-r from-indigo-600 to-pink-500 text-white font-medium rounded-md hover:from-indigo-700 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-70"
             >
-              {isLoading ? "Logging in..." : "Log In"}
+              {isLoading ? "..." : "Log In"}
               {!isLoading && <ArrowRightIcon className="ml-2 h-5 w-5" />}
             </button>
           </form>
