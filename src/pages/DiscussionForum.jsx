@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate, Link, Routes, Route } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Routes, Route, Link } from "react-router-dom";
 import {
   MagnifyingGlassIcon,
   ChevronUpIcon,
@@ -7,6 +7,7 @@ import {
   UserIcon,
   ChevronDownIcon as ChevronDown,
 } from "@heroicons/react/24/outline";
+import GeneralNavbar from "../components/GeneralNavbar";
 
 // Discussion Item Component
 const DiscussionItem = ({ discussion }) => {
@@ -105,7 +106,7 @@ const TopicPage = ({ topic }) => {
 };
 
 // Main StudyHub Component
-const StudyHub = () => {
+const StudyHubDiscussionForum = () => {
   const [activeFilter, setActiveFilter] = useState("latest");
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -163,162 +164,154 @@ const StudyHub = () => {
 
   const handleFilterChange = (filter) => {
     setActiveFilter(filter);
-    // In a real app, you would filter the discussions based on the selected filter
   };
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
-    // In a real app, you would load the appropriate discussions for the selected page
   };
 
   return (
-    <div className="bg-gray-50 p-4 rounded-lg max-w-4xl mx-auto">
-      <header className="flex items-center justify-between mb-8">
-        <div className="flex items-center">
-          <Link to="/">
-            <h1 className="text-2xl font-bold text-gray-800">StudyHub</h1>
-          </Link>
-        </div>
-
-        <div className="flex items-center space-x-4">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search discussions..."
-              className="pl-10 pr-4 py-2 rounded-full border border-gray-300 text-sm w-64"
-            />
-            <MagnifyingGlassIcon className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
-          </div>
-
-          <div className="relative">
-            <Link to="/topics">
-              <button className="flex items-center space-x-2 px-4 py-2 rounded-full border border-gray-300 text-sm hover:bg-gray-50">
-                <span>All Topics</span>
-                <ChevronDown className="w-4 h-4" />
-              </button>
-            </Link>
-          </div>
-
-          <div className="relative">
-            <div
-              className="w-10 h-10 rounded-full bg-cover bg-center"
-              style={{ backgroundImage: `url('/api/placeholder/40/40')` }}
-            ></div>
-            <div className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-green-500"></div>
-          </div>
-        </div>
-      </header>
-
+    <div className="min-h-screen bg-gray-50">
       <Routes>
         <Route
           path="/"
           element={
-            <>
-              <div className="text-center mb-8">
-                <h2 className="text-xl font-bold text-indigo-500 mb-2">
-                  Discussion Forum
-                </h2>
-                <p className="text-gray-600">
-                  Join the conversation and share your knowledge with the
-                  community
-                </p>
-                <div className="mt-3">
-                  <Link
-                    to="/topics"
-                    className="inline-block px-4 py-1.5 text-sm text-indigo-600 hover:text-indigo-700 hover:underline"
-                  >
-                    View all topics →
-                  </Link>
+            <main className="min-h-screen bg-gray-50">
+              <GeneralNavbar />
+              <div className="max-w-5xl mx-auto pt-6 px-4">
+                <header className="flex items-center justify-between mb-8">
+                  <div className="flex items-center"></div>
+
+                  <div className="flex items-center space-x-4">
+                    <div className="relative">
+                      <input
+                        type="text"
+                        placeholder="Search discussions..."
+                        className="pl-10 pr-4 py-2 rounded-full border border-gray-300 text-sm w-64"
+                      />
+                      <MagnifyingGlassIcon className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
+                    </div>
+
+                    <div className="relative">
+                      <Link to="/topics">
+                        <button className="flex items-center space-x-2 px-4 py-2 rounded-full border border-gray-300 text-sm hover:bg-gray-50">
+                          <span>All Topics</span>
+                          <ChevronDown className="w-4 h-4" />
+                        </button>
+                      </Link>
+                    </div>
+                  </div>
+                </header>
+
+                <div className="text-center mb-8">
+                  <h2 className="text-xl font-bold text-indigo-500 mb-2">
+                    Discussion Forum
+                  </h2>
+                  <p className="text-gray-600">
+                    Join the conversation and share your knowledge with the
+                    community
+                  </p>
+                  <div className="mt-3">
+                    <Link
+                      to="/topics"
+                      className="inline-block px-4 py-1.5 text-sm text-indigo-600 hover:text-indigo-700 hover:underline"
+                    >
+                      View all topics →
+                    </Link>
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex space-x-4 mb-6">
-                <button
-                  onClick={() => handleFilterChange("latest")}
-                  className={`px-6 py-2 rounded-full flex items-center ${
-                    activeFilter === "latest"
-                      ? "bg-indigo-500 text-white"
-                      : "bg-white text-gray-700 border border-gray-300"
-                  }`}
-                >
-                  <span
-                    className={`w-2 h-2 rounded-full mr-2 ${
-                      activeFilter === "latest"
-                        ? "bg-white"
-                        : "border border-gray-500"
-                    }`}
-                  ></span>
-                  Latest
-                </button>
-                <button
-                  onClick={() => handleFilterChange("popular")}
-                  className={`px-6 py-2 rounded-full flex items-center ${
-                    activeFilter === "popular"
-                      ? "bg-indigo-500 text-white"
-                      : "bg-white text-gray-700 border border-gray-300"
-                  }`}
-                >
-                  <span
-                    className={`w-2 h-2 rounded-full mr-2 ${
-                      activeFilter === "popular"
-                        ? "bg-white"
-                        : "border border-gray-500"
-                    }`}
-                  ></span>
-                  Popular
-                </button>
-                <button
-                  onClick={() => handleFilterChange("unanswered")}
-                  className={`px-6 py-2 rounded-full flex items-center ${
-                    activeFilter === "unanswered"
-                      ? "bg-indigo-500 text-white"
-                      : "bg-white text-gray-700 border border-gray-300"
-                  }`}
-                >
-                  <span
-                    className={`w-2 h-2 rounded-full mr-2 ${
-                      activeFilter === "unanswered"
-                        ? "bg-white"
-                        : "border border-gray-500"
-                    }`}
-                  ></span>
-                  Unanswered
-                </button>
-              </div>
-
-              <div className="space-y-4">
-                {discussions.map((discussion) => (
-                  <DiscussionItem key={discussion.id} discussion={discussion} />
-                ))}
-              </div>
-
-              <div className="flex justify-center space-x-2 mt-8">
-                {[1, 2, 3].map((page) => (
+                <div className="flex space-x-4 mb-6">
                   <button
-                    key={page}
-                    onClick={() => handlePageChange(page)}
+                    onClick={() => handleFilterChange("latest")}
+                    className={`px-6 py-2 rounded-full flex items-center ${
+                      activeFilter === "latest"
+                        ? "bg-indigo-500 text-white"
+                        : "bg-white text-gray-700 border border-gray-300"
+                    }`}
+                  >
+                    <span
+                      className={`w-2 h-2 rounded-full mr-2 ${
+                        activeFilter === "latest"
+                          ? "bg-white"
+                          : "border border-gray-500"
+                      }`}
+                    ></span>
+                    Latest
+                  </button>
+                  <button
+                    onClick={() => handleFilterChange("popular")}
+                    className={`px-6 py-2 rounded-full flex items-center ${
+                      activeFilter === "popular"
+                        ? "bg-indigo-500 text-white"
+                        : "bg-white text-gray-700 border border-gray-300"
+                    }`}
+                  >
+                    <span
+                      className={`w-2 h-2 rounded-full mr-2 ${
+                        activeFilter === "popular"
+                          ? "bg-white"
+                          : "border border-gray-500"
+                      }`}
+                    ></span>
+                    Popular
+                  </button>
+                  <button
+                    onClick={() => handleFilterChange("unanswered")}
+                    className={`px-6 py-2 rounded-full flex items-center ${
+                      activeFilter === "unanswered"
+                        ? "bg-indigo-500 text-white"
+                        : "bg-white text-gray-700 border border-gray-300"
+                    }`}
+                  >
+                    <span
+                      className={`w-2 h-2 rounded-full mr-2 ${
+                        activeFilter === "unanswered"
+                          ? "bg-white"
+                          : "border border-gray-500"
+                      }`}
+                    ></span>
+                    Unanswered
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  {discussions.map((discussion) => (
+                    <DiscussionItem
+                      key={discussion.id}
+                      discussion={discussion}
+                    />
+                  ))}
+                </div>
+
+                <div className="flex justify-center space-x-2 mt-8">
+                  {[1, 2, 3].map((page) => (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                        currentPage === page
+                          ? "bg-indigo-500 text-white"
+                          : "bg-white border border-gray-300 text-gray-700"
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                  <span className="flex items-center px-2">...</span>
+                  <button
+                    onClick={() => handlePageChange(10)}
                     className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                      currentPage === page
+                      currentPage === 10
                         ? "bg-indigo-500 text-white"
                         : "bg-white border border-gray-300 text-gray-700"
                     }`}
                   >
-                    {page}
+                    10
                   </button>
-                ))}
-                <span className="flex items-center px-2">...</span>
-                <button
-                  onClick={() => handlePageChange(10)}
-                  className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                    currentPage === 10
-                      ? "bg-indigo-500 text-white"
-                      : "bg-white border border-gray-300 text-gray-700"
-                  }`}
-                >
-                  10
-                </button>
+                </div>
               </div>
-            </>
+            </main>
           }
         />
 
@@ -342,8 +335,8 @@ const StudyHub = () => {
 // App Component with Router
 const App = () => {
   return (
-    <div className="p-4">
-      <StudyHub />
+    <div>
+      <StudyHubDiscussionForum />
     </div>
   );
 };

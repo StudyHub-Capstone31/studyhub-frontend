@@ -9,6 +9,7 @@ import {
   ArrowDownTrayIcon,
   ChevronLeftIcon,
 } from "@heroicons/react/24/outline";
+import GeneralNavbar from "../components/GeneralNavbar";
 
 // Header Component
 const Header = () => (
@@ -162,8 +163,10 @@ const ResourceCategory = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-md p-6 mb-8">
-        <Header />
+      <GeneralNavbar />
+
+      <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-md p-6 mb-8 mt-6">
+        {/* Remove the original header since we're using GeneralNavbar */}
 
         <div className="mb-6">
           <Link

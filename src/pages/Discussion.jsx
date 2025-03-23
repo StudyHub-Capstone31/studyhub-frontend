@@ -9,6 +9,7 @@ import {
   ChevronDownIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
+import GeneralNavbar from "../components/GeneralNavbar";
 
 function Discussion() {
   const { forumId } = useParams();
@@ -150,194 +151,195 @@ function Discussion() {
   };
 
   return (
-    <div className="bg-gray-50 max-w-4xl mx-auto p-4 rounded-lg">
-      <header className="flex items-center justify-between mb-8">
-        <div className="flex items-center">
-          <div className="w-10 h-10 rounded-full border border-indigo-500 flex items-center justify-center mr-3">
-            <div className="w-2 h-2 rounded-full bg-indigo-500"></div>
-          </div>
-          <Link to="/">
-            <h1 className="text-2xl font-bold text-gray-800">StudyHub</h1>
-          </Link>
-        </div>
+    <div className="min-h-screen bg-gray-50">
+      <GeneralNavbar />
 
-        <div className="flex items-center">
-          <button
-            onClick={() => navigate("/discussion-forum")}
-            className="flex items-center px-4 py-2 text-indigo-600 hover:bg-indigo-50 rounded-full transition-colors"
-          >
-            <ArrowLeftIcon className="h-4 w-4 mr-2" />
-            Back to Forums
-          </button>
-        </div>
-      </header>
-
-      {loading ? (
-        <div className="flex justify-center my-12">
-          <div className="animate-spin h-10 w-10 border-4 border-indigo-500 rounded-full border-t-transparent"></div>
-        </div>
-      ) : (
-        <>
-          <div className="text-center mb-8">
-            <h2 className="text-xl font-bold text-indigo-500 mb-2">
-              {forum.title}
-            </h2>
-            <p className="text-gray-600">{forum.description}</p>
+      <div className="max-w-4xl mx-auto py-8 px-4">
+        <header className="flex items-center justify-between mb-8">
+          <div className="flex items-center">
+            <Link to="/">
+              <h1 className="text-2xl font-bold text-gray-800">StudyHub</h1>
+            </Link>
           </div>
 
-          <div className="bg-white rounded-lg shadow-md p-5 mb-8">
-            <h2 className="text-lg font-medium mb-3">Create a new post</h2>
-            <textarea
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              rows="3"
-              placeholder="Share your thoughts or questions..."
-              value={newPost}
-              onChange={(e) => setNewPost(e.target.value)}
-            ></textarea>
-            <div className="flex justify-end mt-3">
-              <button
-                className="flex items-center px-4 py-2 rounded-full bg-indigo-500 text-white hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                onClick={handleSubmitPost}
-                disabled={newPost.trim() === ""}
-              >
-                Post
-                <PaperAirplaneIcon className="ml-2 h-4 w-4" />
-              </button>
-            </div>
-          </div>
-
-          <h2 className="text-lg font-medium mb-4">Recent Discussions</h2>
-          <div className="space-y-4">
-            {discussions.map((discussion) => (
-              <div
-                key={discussion.id}
-                className="bg-white rounded-lg shadow overflow-hidden"
-              >
-                <div className="flex">
-                  <div className="w-16 bg-gray-100 p-2 flex flex-col items-center">
-                    <button
-                      onClick={() => handleVote(discussion.id, "up")}
-                      className="focus:outline-none hover:text-indigo-500 transition-colors"
-                    >
-                      <ChevronUpIcon className="w-5 h-5 text-gray-500" />
-                    </button>
-                    <span className="font-bold my-1">{discussion.likes}</span>
-                    <button
-                      onClick={() => handleVote(discussion.id, "down")}
-                      className="focus:outline-none hover:text-indigo-500 transition-colors"
-                    >
-                      <ChevronDownIcon className="w-5 h-5 text-gray-500" />
-                    </button>
-                  </div>
-
-                  <div className="p-4 flex-1">
-                    <div className="flex items-center mb-2">
-                      <span className="bg-indigo-100 text-indigo-600 px-3 py-1 rounded-full text-xs font-medium">
-                        {discussion.topic}
-                      </span>
-                      {discussion.userId === 5 && (
-                        <div className="ml-auto flex space-x-2">
-                          <button className="p-1 rounded-full text-indigo-600 hover:bg-indigo-50">
-                            <PencilIcon className="h-4 w-4" />
-                          </button>
-                          <button
-                            className="p-1 rounded-full text-red-600 hover:bg-red-50"
-                            onClick={() => handleDeleteClick(discussion.id)}
-                          >
-                            <TrashIcon className="h-4 w-4" />
-                          </button>
-                        </div>
-                      )}
-                    </div>
-
-                    <p className="text-gray-800 text-sm mb-4">
-                      {discussion.content}
-                    </p>
-
-                    <div className="flex items-center justify-between text-sm text-gray-500">
-                      <div className="flex items-center">
-                        <img
-                          src={discussion.avatar}
-                          alt={discussion.username}
-                          className="w-5 h-5 rounded-full mr-2"
-                        />
-                        <span>
-                          Posted by{" "}
-                          <span className="font-medium text-gray-700">
-                            {discussion.username}
-                          </span>{" "}
-                          · {formatDate(discussion.timestamp)}
-                        </span>
-                      </div>
-                      <div className="flex items-center">
-                        <span>{discussion.replies} replies</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
-
-      {openDialog && (
-        <div
-          className="fixed inset-0 z-10 overflow-y-auto"
-          aria-labelledby="modal-title"
-          role="dialog"
-          aria-modal="true"
-        >
-          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div
-              className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-              aria-hidden="true"
-            ></div>
-            <span
-              className="hidden sm:inline-block sm:align-middle sm:h-screen"
-              aria-hidden="true"
+          <div className="flex items-center">
+            <button
+              onClick={() => navigate("/discussion-forum")}
+              className="flex items-center px-4 py-2 text-indigo-600 hover:bg-indigo-50 rounded-full transition-colors"
             >
-              &#8203;
-            </span>
-            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                <div className="sm:flex sm:items-start">
-                  <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                    <h3
-                      className="text-lg leading-6 font-medium text-gray-900"
-                      id="modal-title"
-                    >
-                      Delete Post
-                    </h3>
-                    <div className="mt-2">
-                      <p className="text-sm text-gray-500">
-                        Are you sure you want to delete this post? This action
-                        cannot be undone.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+              <ArrowLeftIcon className="h-4 w-4 mr-2" />
+              Back to Forums
+            </button>
+          </div>
+        </header>
+
+        {loading ? (
+          <div className="flex justify-center my-12">
+            <div className="animate-spin h-10 w-10 border-4 border-indigo-500 rounded-full border-t-transparent"></div>
+          </div>
+        ) : (
+          <>
+            <div className="text-center mb-8">
+              <h2 className="text-xl font-bold text-indigo-500 mb-2">
+                {forum.title}
+              </h2>
+              <p className="text-gray-600">{forum.description}</p>
+            </div>
+
+            <div className="bg-white rounded-lg shadow-md p-5 mb-8">
+              <h2 className="text-lg font-medium mb-3">Create a new post</h2>
+              <textarea
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                rows="3"
+                placeholder="Share your thoughts or questions..."
+                value={newPost}
+                onChange={(e) => setNewPost(e.target.value)}
+              ></textarea>
+              <div className="flex justify-end mt-3">
                 <button
-                  type="button"
-                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
-                  onClick={handleDeleteConfirm}
+                  className="flex items-center px-4 py-2 rounded-full bg-indigo-500 text-white hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  onClick={handleSubmitPost}
+                  disabled={newPost.trim() === ""}
                 >
-                  Delete
-                </button>
-                <button
-                  type="button"
-                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                  onClick={() => setOpenDialog(false)}
-                >
-                  Cancel
+                  Post
+                  <PaperAirplaneIcon className="ml-2 h-4 w-4" />
                 </button>
               </div>
             </div>
+
+            <h2 className="text-lg font-medium mb-4">Recent Discussions</h2>
+            <div className="space-y-4">
+              {discussions.map((discussion) => (
+                <div
+                  key={discussion.id}
+                  className="bg-white rounded-lg shadow overflow-hidden"
+                >
+                  <div className="flex">
+                    <div className="w-16 bg-gray-100 p-2 flex flex-col items-center">
+                      <button
+                        onClick={() => handleVote(discussion.id, "up")}
+                        className="focus:outline-none hover:text-indigo-500 transition-colors"
+                      >
+                        <ChevronUpIcon className="w-5 h-5 text-gray-500" />
+                      </button>
+                      <span className="font-bold my-1">{discussion.likes}</span>
+                      <button
+                        onClick={() => handleVote(discussion.id, "down")}
+                        className="focus:outline-none hover:text-indigo-500 transition-colors"
+                      >
+                        <ChevronDownIcon className="w-5 h-5 text-gray-500" />
+                      </button>
+                    </div>
+
+                    <div className="p-4 flex-1">
+                      <div className="flex items-center mb-2">
+                        <span className="bg-indigo-100 text-indigo-600 px-3 py-1 rounded-full text-xs font-medium">
+                          {discussion.topic}
+                        </span>
+                        {discussion.userId === 5 && (
+                          <div className="ml-auto flex space-x-2">
+                            <button className="p-1 rounded-full text-indigo-600 hover:bg-indigo-50">
+                              <PencilIcon className="h-4 w-4" />
+                            </button>
+                            <button
+                              className="p-1 rounded-full text-red-600 hover:bg-red-50"
+                              onClick={() => handleDeleteClick(discussion.id)}
+                            >
+                              <TrashIcon className="h-4 w-4" />
+                            </button>
+                          </div>
+                        )}
+                      </div>
+
+                      <p className="text-gray-800 text-sm mb-4">
+                        {discussion.content}
+                      </p>
+
+                      <div className="flex items-center justify-between text-sm text-gray-500">
+                        <div className="flex items-center">
+                          <img
+                            src={discussion.avatar}
+                            alt={discussion.username}
+                            className="w-5 h-5 rounded-full mr-2"
+                          />
+                          <span>
+                            Posted by{" "}
+                            <span className="font-medium text-gray-700">
+                              {discussion.username}
+                            </span>{" "}
+                            · {formatDate(discussion.timestamp)}
+                          </span>
+                        </div>
+                        <div className="flex items-center">
+                          <span>{discussion.replies} replies</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {openDialog && (
+          <div
+            className="fixed inset-0 z-10 overflow-y-auto"
+            aria-labelledby="modal-title"
+            role="dialog"
+            aria-modal="true"
+          >
+            <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+              <div
+                className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+                aria-hidden="true"
+              ></div>
+              <span
+                className="hidden sm:inline-block sm:align-middle sm:h-screen"
+                aria-hidden="true"
+              >
+                &#8203;
+              </span>
+              <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                  <div className="sm:flex sm:items-start">
+                    <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                      <h3
+                        className="text-lg leading-6 font-medium text-gray-900"
+                        id="modal-title"
+                      >
+                        Delete Post
+                      </h3>
+                      <div className="mt-2">
+                        <p className="text-sm text-gray-500">
+                          Are you sure you want to delete this post? This action
+                          cannot be undone.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                  <button
+                    type="button"
+                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                    onClick={handleDeleteConfirm}
+                  >
+                    Delete
+                  </button>
+                  <button
+                    type="button"
+                    className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                    onClick={() => setOpenDialog(false)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

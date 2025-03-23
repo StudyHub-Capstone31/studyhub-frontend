@@ -15,20 +15,7 @@ import {
   CloudArrowDownIcon,
 } from "@heroicons/react/24/outline";
 import { FaYoutube, FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
-
-// Header Component
-const Header = () => (
-  <header className="flex justify-between items-center mb-8">
-    <h1 className="text-2xl font-bold text-gray-800">StudyHub</h1>
-    <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
-      <img
-        src="/api/placeholder/40/40"
-        alt="User profile"
-        className="w-full h-full object-cover"
-      />
-    </div>
-  </header>
-);
+import GeneralNavbar from "../components/GeneralNavbar";
 
 // Search Bar Component
 const SearchBar = () => (
@@ -357,9 +344,11 @@ const Footer = () => (
 function Resource() {
   return (
     <div className="min-h-screen bg-gray-50">
+      <GeneralNavbar />
+
       {/* Main content container */}
-      <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-md p-6 mb-8">
-        <Header />
+      <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-md p-6 mb-8 mt-6">
+        {/* Remove the original header since we're using GeneralNavbar */}
 
         {/* Welcome section */}
         <div className="text-center mb-8">

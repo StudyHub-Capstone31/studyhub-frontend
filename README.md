@@ -21,6 +21,11 @@ StudyHub is a comprehensive platform designed to enhance academic excellence by 
 - Voting system for posts
 - Reply functionality
 
+### Navigation
+- Home-specific navigation for the main landing experience
+- General navigation for inner pages with user authentication state handling
+- Mobile-responsive design with collapsible menu
+
 ## Getting Started
 
 ### Prerequisites
@@ -54,6 +59,8 @@ studyhub-frontend/
 ├── public/              # Static assets
 ├── src/                 # Source files
 │   ├── components/      # Reusable components
+│   │   ├── Navbar.jsx        # Home-specific navigation
+│   │   ├── GeneralNavbar.jsx # General navigation for other pages
 │   ├── pages/           # Page components
 │   │   ├── Discussion.jsx   # Discussion forum page
 │   │   ├── Landing.jsx      # Landing/home page
@@ -85,6 +92,11 @@ The Resource Hub provides access to various educational materials:
 - Search for specific resources
 - Access recent and popular materials
 - View platform statistics
+
+### Navigation Components
+The application uses two different navigation components:
+- `Navbar.jsx`: Used specifically on the Home page with simplified navigation
+- `GeneralNavbar.jsx`: Used on inner pages with complete navigation options and user authentication state
 
 ## Contributing
 Contributions are welcome! Please feel free to submit a Pull Request.

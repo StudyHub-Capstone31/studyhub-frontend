@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BellIcon, BellAlertIcon } from "@heroicons/react/24/outline";
+import GeneralNavbar from "../components/GeneralNavbar";
 
 function Announcements() {
   const [announcements, setAnnouncements] = useState([]);
@@ -53,47 +54,53 @@ function Announcements() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Announcements</h1>
+    <div className="min-h-screen bg-gray-50">
+      <GeneralNavbar />
 
-      {loading ? (
-        <div className="flex justify-center my-12">
-          <div className="animate-spin h-10 w-10 border-4 border-blue-500 rounded-full border-t-transparent"></div>
-        </div>
-      ) : (
-        <div className="bg-white rounded-lg shadow-md p-4">
-          <ul className="divide-y divide-gray-200">
-            {announcements.map((announcement, index) => (
-              <li key={announcement.id} className="py-4">
-                <div className="flex">
-                  <div className="flex-shrink-0 mr-3">
-                    {announcement.important ? (
-                      <BellAlertIcon className="h-6 w-6 text-red-500" />
-                    ) : (
-                      <BellIcon className="h-6 w-6 text-blue-500" />
-                    )}
+      <div className="max-w-4xl mx-auto py-8 px-4">
+        <h1 className="text-3xl font-bold mb-6">Announcements</h1>
+
+        {loading ? (
+          <div className="flex justify-center my-12">
+            <div className="animate-spin h-10 w-10 border-4 border-blue-500 rounded-full border-t-transparent"></div>
+          </div>
+        ) : (
+          <div className="bg-white rounded-lg shadow-md p-4">
+            <ul className="divide-y divide-gray-200">
+              {announcements.map((announcement, index) => (
+                <li key={announcement.id} className="py-4">
+                  <div className="flex">
+                    <div className="flex-shrink-0 mr-3">
+                      {announcement.important ? (
+                        <BellAlertIcon className="h-6 w-6 text-red-500" />
+                      ) : (
+                        <BellIcon className="h-6 w-6 text-blue-500" />
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <h2
+                        className={`text-xl font-medium ${
+                          announcement.important
+                            ? "text-red-600"
+                            : "text-blue-600"
+                        }`}
+                      >
+                        {announcement.title}
+                      </h2>
+                      <p className="text-gray-700 my-2">
+                        {announcement.content}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Posted on: {formatDate(announcement.date)}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <h2
-                      className={`text-xl font-medium ${
-                        announcement.important
-                          ? "text-red-600"
-                          : "text-blue-600"
-                      }`}
-                    >
-                      {announcement.title}
-                    </h2>
-                    <p className="text-gray-700 my-2">{announcement.content}</p>
-                    <p className="text-sm text-gray-500">
-                      Posted on: {formatDate(announcement.date)}
-                    </p>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

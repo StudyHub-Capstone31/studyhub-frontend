@@ -7,6 +7,7 @@ import {
   MegaphoneIcon,
   UserGroupIcon,
 } from "@heroicons/react/24/outline";
+import Navbar from "../components/Navbar";
 
 const Home = () => {
   return (
@@ -39,7 +40,7 @@ const Home = () => {
       {/* Main content */}
       <div className="relative z-10 max-w-6xl mx-auto px-4 pb-16">
         {/* Header with avatar and color dots */}
-        <header className="flex justify-between items-center py-4">
+        {/* <header className="flex justify-between items-center py-4">
           <div className="text-2xl font-bold text-gray-800">StudyHub</div>
           <div className="flex items-center">
             <div className="h-2 w-2 rounded-full bg-blue-600 mr-1"></div>
@@ -53,7 +54,9 @@ const Home = () => {
               <div className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-green-500 border border-white"></div>
             </div>
           </div>
-        </header>
+        </header> */}
+
+        <Navbar />
 
         {/* Search bar */}
         <div className="mt-12 mb-14">

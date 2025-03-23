@@ -13,6 +13,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { solarizedlight } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { ChevronDoubleLeftIcon } from "@heroicons/react/16/solid";
 import { Link } from "react-router-dom";
+import GeneralNavbar from "../components/GeneralNavbar";
 
 function Chatbot() {
   const [messages, setMessages] = useState([]);
@@ -75,10 +76,11 @@ function Chatbot() {
   };
 
   return (
-    <div className="flex flex-col h-screen w-[95%] mx-auto">
-      {/* Header */}
-      <header className="bg-blue-300 p-4 text-white mt-2 rounded-lg">
-        <div className="container mx-auto flex justify-between items-center">
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <GeneralNavbar />
+
+      <header className="bg-white border-b border-gray-200 shadow-sm">
+        <div className="max-w-4xl mx-auto py-4 px-4 flex justify-between items-center">
           <h1 className="text-xl font-bold flex items-center">
             <div className="flex items-center space-x-2 cursor-pointer">
               <Link to="/" className="flex items-center">

@@ -7,6 +7,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";
+import GeneralNavbar from "../components/GeneralNavbar";
 
 const UserDashboard = () => {
   const [fileHover, setFileHover] = useState(false);
@@ -68,26 +69,8 @@ const UserDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <h1 className="text-xl font-bold text-gray-800">StudyHub</h1>
-          <div className="flex items-center space-x-4">
-            <button>
-              <BellIcon className="h-6 w-6 text-yellow-500" />
-            </button>
-            <Link
-              to="/profile"
-              className="flex items-center text-sm text-gray-700 hover:text-gray-900"
-            >
-              <div className="h-8 w-8 rounded-full bg-yellow-500 flex items-center justify-center mr-2">
-                <span className="text-white font-bold">{getInitial()}</span>
-              </div>
-              <span>Profile</span>
-            </Link>
-          </div>
-        </div>
-      </header>
+      {/* Replace the header with GeneralNavbar */}
+      <GeneralNavbar />
 
       {/* Main Content */}
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
