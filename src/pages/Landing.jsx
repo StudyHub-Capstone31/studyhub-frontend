@@ -1,20 +1,20 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+// import { useNavigate } from "react-router-dom";
+// import { useAuth } from "../context/AuthContext";
 import communitySharingImage from "../assets/discussion-pic.jpg";
 import aiAssistantimage from "../assets/tyiping-picture.jpg";
 import resourceHubImage from "../assets/library.png";
 
 const Landing = () => {
-  const { currentUser } = useAuth();
-  const navigate = useNavigate();
+  // const { currentUser } = useAuth();
+  // const navigate = useNavigate();
 
   // Redirect authenticated users to dashboard
-  useEffect(() => {
-    if (currentUser) {
-      navigate("/dashboard");
-    }
-  }, [currentUser, navigate]);
+  // useEffect(() => {
+  //   if (currentUser) {
+  //     navigate("/dashboard");
+  //   }
+  // }, [currentUser, navigate]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">

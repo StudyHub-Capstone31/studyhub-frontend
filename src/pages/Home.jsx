@@ -8,6 +8,7 @@ import {
   UserGroupIcon,
 } from "@heroicons/react/24/outline";
 import Navbar from "../components/Navbar";
+import GeneralNavbar from "../components/GeneralNavbar";
 
 const Home = () => {
   return (
@@ -38,25 +39,8 @@ const Home = () => {
       </div>
 
       {/* Main content */}
-      <div className="relative z-10 max-w-6xl mx-auto px-4 pb-16">
-        {/* Header with avatar and color dots */}
-        {/* <header className="flex justify-between items-center py-4">
-          <div className="text-2xl font-bold text-gray-800">StudyHub</div>
-          <div className="flex items-center">
-            <div className="h-2 w-2 rounded-full bg-blue-600 mr-1"></div>
-            <div className="h-2 w-2 rounded-full bg-orange-400"></div>
-            <div className="ml-6 relative">
-              <img
-                src="/api/placeholder/48/48"
-                alt="Avatar"
-                className="h-10 w-10 rounded-full border-2 border-white"
-              />
-              <div className="absolute bottom-0 right-0 h-2.5 w-2.5 rounded-full bg-green-500 border border-white"></div>
-            </div>
-          </div>
-        </header> */}
-
-        <Navbar />
+      <div className="relative z-10 max-w-screen mx-auto">
+        <GeneralNavbar />
 
         {/* Search bar */}
         <div className="mt-12 mb-14">
