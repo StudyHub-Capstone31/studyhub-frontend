@@ -47,6 +47,7 @@ const ResourceCard = ({
   typeColor,
   details,
   buttons,
+  fileUrl,
 }) => (
   <div className="border rounded-lg p-4 flex items-start">
     <div
@@ -70,15 +71,21 @@ const ResourceCard = ({
 );
 
 // Download Button Component
-const DownloadButton = () => (
-  <button className="text-xs flex items-center text-gray-600 mr-4">
+const DownloadButton = ({ onClick }) => (
+  <button
+    className="text-xs flex items-center text-gray-600 mr-4 hover:text-blue-600 transition-colors"
+    onClick={onClick}
+  >
     <ArrowDownTrayIcon className="h-4 w-4 mr-1" /> Download
   </button>
 );
 
 // Preview Button Component
-const PreviewButton = () => (
-  <button className="text-xs flex items-center text-gray-600">
+const PreviewButton = ({ onClick }) => (
+  <button
+    className="text-xs flex items-center text-gray-600 hover:text-blue-600 transition-colors"
+    onClick={onClick}
+  >
     <MagnifyingGlassIcon className="h-4 w-4 mr-1" /> Preview
   </button>
 );
@@ -88,6 +95,27 @@ const ResourceCategory = () => {
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
   const [categoryInfo, setCategoryInfo] = useState({ title: "", icon: null });
+
+  // Handler for preview action
+  const handlePreview = (resource) => {
+    // Open the file in a new tab for preview
+    if (resource.fileUrl) {
+      window.open(resource.fileUrl, "_blank");
+    }
+  };
+
+  // Handler for download action
+  const handleDownload = (resource) => {
+    // Create an anchor element and trigger download
+    if (resource.fileUrl) {
+      const link = document.createElement("a");
+      link.href = resource.fileUrl;
+      link.download = resource.title;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
 
   useEffect(() => {
     // This would normally be an API call
@@ -154,6 +182,11 @@ const ResourceCategory = () => {
               ? "PDF - 15 Pages"
               : "PDF - 100 Pages"
           } - Prof. Johnson`,
+          // Add mock file URLs based on category and index
+          fileUrl:
+            categoryId === "videos"
+              ? `https://example.com/${categoryId}/video${idx + 1}.mp4`
+              : `https://example.com/${categoryId}/resource${idx + 1}.pdf`,
         }));
 
       setResources(mockResources);
@@ -204,10 +237,11 @@ const ResourceCategory = () => {
                 type={resource.type}
                 typeColor={resource.typeColor}
                 details={resource.details}
+                fileUrl={resource.fileUrl}
                 buttons={
                   <>
-                    <DownloadButton />
-                    <PreviewButton />
+                    <DownloadButton onClick={() => handleDownload(resource)} />
+                    <PreviewButton onClick={() => handlePreview(resource)} />
                   </>
                 }
               />

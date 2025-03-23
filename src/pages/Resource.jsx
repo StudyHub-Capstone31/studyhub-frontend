@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   MagnifyingGlassIcon,
@@ -79,6 +79,7 @@ const ResourceCard = ({
   typeColor,
   details,
   buttons,
+  fileUrl,
 }) => (
   <div className="border rounded-lg p-4 flex items-start">
     <div
@@ -102,15 +103,21 @@ const ResourceCard = ({
 );
 
 // Download Button Component
-const DownloadButton = () => (
-  <button className="text-xs flex items-center text-gray-600 mr-4">
+const DownloadButton = ({ onClick }) => (
+  <button
+    className="text-xs flex items-center text-gray-600 mr-4 hover:text-blue-600 transition-colors"
+    onClick={onClick}
+  >
     <ArrowDownTrayIcon className="h-4 w-4 mr-1" /> Download
   </button>
 );
 
 // Preview Button Component
-const PreviewButton = () => (
-  <button className="text-xs flex items-center text-gray-600">
+const PreviewButton = ({ onClick }) => (
+  <button
+    className="text-xs flex items-center text-gray-600 hover:text-blue-600 transition-colors"
+    onClick={onClick}
+  >
     <MagnifyingGlassIcon className="h-4 w-4 mr-1" /> Preview
   </button>
 );
@@ -137,74 +144,108 @@ const SaveButton = () => (
 );
 
 // Recent Resources Component
-const RecentResources = () => (
-  <div className="mb-8">
-    <h3 className="text-lg font-bold text-gray-800 mb-4 border-b-2 border-purple-500 pb-2 inline-block">
-      Recent Resources
-    </h3>
+const RecentResources = () => {
+  // Mock data for resources
+  const resources = [
+    {
+      id: 1,
+      icon: DocumentTextIcon,
+      title: "Data Structures Lecture 2 Notes",
+      type: "PDF",
+      typeColor: "blue-500",
+      details: "PDF - 15 Pages - Dr. Asamoah",
+      fileUrl: "https://example.com/data-structures-lecture2.pdf",
+    },
+    {
+      id: 2,
+      icon: VideoCameraIcon,
+      title: "Financial Accounting Lecture 1 Video",
+      type: "VIDEO",
+      typeColor: "red-500",
+      details: "Video - 2 hours - Dr. Boateng",
+      videoUrl: "https://youtube.com/watch?v=example123",
+    },
+    {
+      id: 3,
+      icon: DocumentTextIcon,
+      title: "Data Structures E-Book",
+      type: "E-BOOK",
+      typeColor: "purple-500",
+      details: "PDF - 50 Pages - Prof. Howard",
+      fileUrl: "https://example.com/data-structures-ebook.pdf",
+    },
+    {
+      id: 4,
+      icon: QuestionMarkCircleIcon,
+      title: "Operation Research Past Questions",
+      type: "TESTED",
+      typeColor: "yellow-500",
+      details: "PDF - 20 Pages - Prof. Howard",
+      fileUrl: "https://example.com/operation-research-questions.pdf",
+    },
+  ];
 
-    <div className="grid grid-cols-2 gap-4 mt-4">
-      <ResourceCard
-        icon={DocumentTextIcon}
-        title="Data Structures Lecture 2 Notes"
-        type="PDF"
-        typeColor="blue-500"
-        details="PDF - 15 Pages - Dr. Asamoah"
-        buttons={
-          <>
-            <DownloadButton />
-            <PreviewButton />
-          </>
-        }
-      />
+  // Handler for preview action
+  const handlePreview = (resource) => {
+    // Open the file in a new tab for preview
+    if (resource.fileUrl) {
+      window.open(resource.fileUrl, "_blank");
+    }
+  };
 
-      <ResourceCard
-        icon={VideoCameraIcon}
-        title="Financial Accounting Lecture 1 Video"
-        type="VIDEO"
-        typeColor="red-500"
-        details="Video - 2 hours - Dr. Boateng"
-        buttons={
-          <>
-            <YouTubeButton />
-            <div className="flex mt-2 w-full">
-              <ShareButton />
-              <SaveButton />
-            </div>
-          </>
-        }
-      />
+  // Handler for download action
+  const handleDownload = (resource) => {
+    // Create an anchor element and trigger download
+    if (resource.fileUrl) {
+      const link = document.createElement("a");
+      link.href = resource.fileUrl;
+      link.download = resource.title;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
 
-      <ResourceCard
-        icon={DocumentTextIcon}
-        title="Data Structures E-Book"
-        type="E-BOOK"
-        typeColor="purple-500"
-        details="PDF - 50 Pages - Prof. Howard"
-        buttons={
-          <>
-            <DownloadButton />
-            <PreviewButton />
-          </>
-        }
-      />
+  return (
+    <div className="mb-8">
+      <h3 className="text-lg font-bold text-gray-800 mb-4 border-b-2 border-purple-500 pb-2 inline-block">
+        Recent Resources
+      </h3>
 
-      <ResourceCard
-        icon={QuestionMarkCircleIcon}
-        title="Operation Research Past Questions"
-        type="TESTED"
-        typeColor="yellow-500"
-        details="PDF - 20 Pages - Prof. Howard"
-        buttons={
-          <>
-            <DownloadButton />
-            <PreviewButton />
-          </>
-        }
-      />
+      <div className="grid grid-cols-2 gap-4 mt-4">
+        {resources.map((resource) => (
+          <ResourceCard
+            key={resource.id}
+            icon={resource.icon}
+            title={resource.title}
+            type={resource.type}
+            typeColor={resource.typeColor}
+            details={resource.details}
+            fileUrl={resource.fileUrl}
+            buttons={
+              <>
+                {resource.type !== "VIDEO" ? (
+                  <>
+                    <DownloadButton onClick={() => handleDownload(resource)} />
+                    <PreviewButton onClick={() => handlePreview(resource)} />
+                  </>
+                ) : (
+                  <>
+                    <YouTubeButton />
+                    <div className="flex mt-2 w-full">
+                      <ShareButton />
+                      <SaveButton />
+                    </div>
+                  </>
+                )}
+              </>
+            }
+          />
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 // Stat Item Component
 const StatItem = ({ icon: Icon, count, label }) => (

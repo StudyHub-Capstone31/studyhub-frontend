@@ -81,17 +81,7 @@ function Chatbot() {
 
       <header className="bg-white border-b border-gray-200 shadow-sm">
         <div className="max-w-4xl mx-auto py-4 px-4 flex justify-between items-center">
-          <h1 className="text-xl font-bold flex items-center">
-            <div className="flex items-center space-x-2 cursor-pointer">
-              <Link to="/" className="flex items-center">
-                <ChevronDoubleLeftIcon className="h-4 w-4 mr-1" />
-                <p className="text-xs mr-4 border p-2 rounded-lg">
-                  Back to StudyHub
-                </p>
-              </Link>
-            </div>
-            🤖 StudyBuddy
-          </h1>
+          <h1 className="text-xl font-bold items-center">🤖 StudyBuddy</h1>
           <button
             onClick={clearChat}
             className="flex items-center text-sm border border-blue-400 hover:bg-blue-500 px-3 py-1 rounded"

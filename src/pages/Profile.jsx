@@ -28,10 +28,8 @@ function Profile() {
     firstName: "",
     lastName: "",
     email: "",
-    phoneNumber: "",
     role: "",
     department: "",
-    bio: "",
   });
 
   useEffect(() => {
@@ -44,12 +42,11 @@ function Profile() {
         lastName: currentUser.lastName || currentUser.name?.split(" ")[1] || "",
         email: currentUser.email || "",
         phoneNumber: currentUser.phoneNumber || "",
-        role: currentUser.role || "",
         department: currentUser.department || "",
-        bio: currentUser.bio || "",
       });
       setPreviewAvatar(
-        currentUser.avatarUrl || "https://mui.com/static/images/avatar/1.jpg"
+        currentUser.avatarUrl ||
+          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzMbOYe3h021cAgW5JdHofpDGpux7Nxn0VWA&s"
       );
       setLoading(false);
     } else {
@@ -60,12 +57,11 @@ function Profile() {
           firstName: "John",
           lastName: "Doe",
           email: "john.doe@example.com",
-          phoneNumber: "(555) 123-4567",
           role: "student",
           department: "Computer Science",
-          bio: "I'm a third-year computer science student interested in artificial intelligence and machine learning.",
-          avatarUrl: "https://mui.com/static/images/avatar/1.jpg",
-          joined: "2022-09-01",
+          avatarUrl:
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzMbOYe3h021cAgW5JdHofpDGpux7Nxn0VWA&s",
+          joined: "2025-03-25",
         };
 
         setUser(mockUserData);
@@ -73,10 +69,8 @@ function Profile() {
           firstName: mockUserData.firstName,
           lastName: mockUserData.lastName,
           email: mockUserData.email,
-          phoneNumber: mockUserData.phoneNumber,
           role: mockUserData.role,
           department: mockUserData.department,
-          bio: mockUserData.bio,
         });
         setPreviewAvatar(mockUserData.avatarUrl);
         setLoading(false);
@@ -107,10 +101,8 @@ function Profile() {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        phoneNumber: user.phoneNumber,
         role: user.role,
         department: user.department,
-        bio: user.bio,
       });
       setPreviewAvatar(user.avatarUrl);
       setAvatar(null);
@@ -147,11 +139,6 @@ function Profile() {
     }, 1000);
   };
 
-  const formatDate = (dateString) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
-    return new Date(dateString).toLocaleDateString(undefined, options);
-  };
-
   if (loading && !user) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -165,7 +152,7 @@ function Profile() {
       <GeneralNavbar />
 
       <div className="max-w-5xl mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-6">My Profile</h1>
+        <h1 className="text-2xl font-bold mb-6">Profile</h1>
 
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           <div className="p-6">
@@ -196,7 +183,7 @@ function Profile() {
                   )}
                 </div>
                 <p className="text-sm text-gray-500 mt-4 text-center">
-                  Member since {user && formatDate(user.joined)}
+                  Member since 2025
                 </p>
               </div>
 
@@ -277,60 +264,36 @@ function Profile() {
                       className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500"
                     />
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Phone Number
-                    </label>
-                    <input
-                      type="text"
-                      name="phoneNumber"
-                      value={formValues.phoneNumber}
-                      onChange={handleInputChange}
-                      disabled={!editMode}
-                      className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Role
-                    </label>
-                    <select
-                      name="role"
-                      value={formValues.role}
-                      onChange={handleInputChange}
-                      disabled={!editMode}
-                      className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500"
-                    >
-                      <option value="student">Student</option>
-                      <option value="teacher">Teacher</option>
-                      <option value="administrator">Administrator</option>
-                    </select>
-                  </div>
-                  <div className="sm:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Department
-                    </label>
-                    <input
-                      type="text"
-                      name="department"
-                      value={formValues.department}
-                      onChange={handleInputChange}
-                      disabled={!editMode}
-                      className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500"
-                    />
-                  </div>
-                  <div className="sm:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Bio
-                    </label>
-                    <textarea
-                      name="bio"
-                      rows="4"
-                      value={formValues.bio}
-                      onChange={handleInputChange}
-                      disabled={!editMode}
-                      className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500"
-                    ></textarea>
+                  <div className="flex items-center space-x-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Role
+                      </label>
+                      <select
+                        name="role"
+                        value={formValues.role}
+                        onChange={handleInputChange}
+                        disabled={!editMode}
+                        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500"
+                      >
+                        <option value="student">Student</option>
+                        <option value="teacher">Teacher</option>
+                        <option value="administrator">Administrator</option>
+                      </select>
+                    </div>
+                    <div className="sm:col-span-2">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Department
+                      </label>
+                      <input
+                        type="text"
+                        name="department"
+                        value={formValues.department}
+                        onChange={handleInputChange}
+                        disabled={!editMode}
+                        className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>

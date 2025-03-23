@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  BellIcon,
   DocumentTextIcon,
   ArrowUpTrayIcon,
   InformationCircleIcon,
@@ -13,6 +12,9 @@ const UserDashboard = () => {
   const [fileHover, setFileHover] = useState(false);
   const [stats, setStats] = useState({ downloads: 0, uploads: 0 });
   const [activities, setActivities] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
   const { currentUser } = useAuth();
 
   // Get first letter of user's first name for avatar
@@ -44,32 +46,45 @@ const UserDashboard = () => {
     if (currentUser && currentUser.department) {
       return currentUser.department;
     }
-    return ""; // Return empty string if no department
+    console.log(currentUser);
+  };
+
+  // Handle file upload logic
+  const handleFileUpload = (files) => {
+    setIsUploading(true);
+    setUploadedFiles(files);
+
+    // Simulate upload process
+    setTimeout(() => {
+      setIsUploading(false);
+      setUploadSuccess(true);
+      // Update upload stats
+      setStats((prevStats) => ({
+        ...prevStats,
+        uploads: prevStats.uploads + files.length,
+      }));
+    }, 2000);
   };
 
   // Load user stats and activities (could be from API in a real app)
   useEffect(() => {
     // This would be an API call in a production app
-    // For now, we're using mock data
+    // For now, i'm using mock data
+    setStats({ downloads: 0, uploads: 0 });
+    // For now, i'm using mock data
     setStats({ downloads: 0, uploads: 0 });
     setActivities([
-      {
-        type: "download",
-        description: "You downloaded Data Structures Lecture Notes 2",
-        time: new Date(Date.now() - 60000 * 30), // 30 minutes ago
-      },
       {
         type: "forum",
         user: "Adolph O.",
         description: "replied to your forum post",
-        time: new Date(Date.now() - 60000 * 120), // 2 hours ago
+        time: new Date(Date.now() - 60000 * 120),
       },
     ]);
   }, [currentUser]);
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Replace the header with GeneralNavbar */}
       <GeneralNavbar />
 
       {/* Main Content */}
@@ -152,16 +167,70 @@ const UserDashboard = () => {
             e.preventDefault();
             setFileHover(true);
           }}
-          onDrop={() => setFileHover(false)}
+          onDrop={(e) => {
+            e.preventDefault();
+            setFileHover(false);
+            const files = Array.from(e.dataTransfer.files);
+            handleFileUpload(files);
+          }}
         >
-          <ArrowUpTrayIcon className="h-10 w-10 text-gray-400 mb-2" />
-          <p className="text-gray-600 text-sm flex items-center">
-            Drag files here or click to upload
-            <InformationCircleIcon className="h-4 w-4 ml-1 text-blue-500" />
-          </p>
-          <button className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors">
-            Browse Files
-          </button>
+          {isUploading ? (
+            <div className="text-center">
+              <div className="spinner-border mb-3">
+                <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+              </div>
+              <p className="text-gray-600">Uploading files...</p>
+            </div>
+          ) : uploadSuccess ? (
+            <div className="text-center">
+              <svg
+                className="w-12 h-12 text-green-500 mx-auto mb-2"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+              <p className="text-green-600 font-medium">Upload successful!</p>
+              <button
+                onClick={() => setUploadSuccess(false)}
+                className="mt-4 px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors"
+              >
+                Upload more files
+              </button>
+            </div>
+          ) : (
+            <>
+              <ArrowUpTrayIcon className="h-10 w-10 text-gray-400 mb-2" />
+              <p className="text-gray-600 text-sm flex items-center">
+                Drag files here or click to upload
+                <InformationCircleIcon className="h-4 w-4 ml-1 text-blue-500" />
+              </p>
+              <button
+                onClick={() => {
+                  const fileInput = document.createElement("input");
+                  fileInput.type = "file";
+                  fileInput.multiple = true;
+                  fileInput.accept = ".pdf,.doc,.docx,.ppt,.pptx,.txt";
+                  fileInput.onchange = (e) => {
+                    const files = Array.from(e.target.files);
+                    if (files.length > 0) {
+                      handleFileUpload(files);
+                    }
+                  };
+                  fileInput.click();
+                }}
+                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+              >
+                Browse Files
+              </button>
+            </>
+          )}
         </div>
 
         {/* Quick Links Section */}

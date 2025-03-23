@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import {
   MagnifyingGlassIcon,
@@ -194,9 +194,8 @@ const StudyHubDiscussionForum = () => {
 
                     <div className="relative">
                       <Link to="/topics">
-                        <button className="flex items-center space-x-2 px-4 py-2 rounded-full border border-gray-300 text-sm hover:bg-gray-50">
+                        <button className="flex items-center space-x-2 px-4 py-2 rounded-full bg-indigo-500 font-semibold text-sm text-white hover:bg-gray-50">
                           <span>All Topics</span>
-                          <ChevronDown className="w-4 h-4" />
                         </button>
                       </Link>
                     </div>
